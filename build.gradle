@@ -19,6 +19,9 @@ repositories {
 }
 
 dependencies {
+	// jwt를 사용하기 위해 이용
+	implementation group: 'com.auth0', name: 'java-jwt', version: '3.10.3'
+	
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
