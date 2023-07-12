@@ -31,7 +31,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 세션을 사용하지 않겠다.
             .and()
         .addFilter(corsFilter) // 필터 등록 (인증이 필요하면 이 필터를 이용하고 인증이 필요 없으면 컨트롤러에 @CorsOrigin 어노테이션 붙이기)
-        .addFilterBefore(new MyFilter3(), SecurityContextPersistenceFilter.class) // 스프링 시큐리티 필터체인에 필터 등록 (스프링 시큐리티 필터체인에 등록된 필드들이 우리가 만들고 적용한 필터보다 먼저 수행된다.)(SecurityContextPersistenceFilter는 스프링 시큐리티 필터 체인의 체인중 제일 먼저 실행되는 필터이다.)
+        .addFilterBefore(new MyFilter1(), SecurityContextPersistenceFilter.class) // 스프링 시큐리티 필터체인에 필터 등록 (스프링 시큐리티 필터체인에 등록된 필드들이 우리가 만들고 적용한 필터보다 먼저 수행된다.)(SecurityContextPersistenceFilter는 스프링 시큐리티 필터 체인의 체인중 제일 먼저 실행되는 필터이다.)
         .formLogin().disable() // jwt 서버를 쓰니깐 폼로그인 disable (폼 태그써서 로그인 안할 것이다.)
         /**
          * 기본적인 http 로그인 방식 사용 안함
