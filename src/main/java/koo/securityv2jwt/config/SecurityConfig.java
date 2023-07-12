@@ -8,6 +8,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.filter.CorsFilter;
 
+/**
+ * 쿠키의 단점
+ * 1. 동일한 도메인으로부터 온 요청만 허용한다
+ * ex) 145.12.672.43 => www.naver.com
+ * 2. http only여서 자바스크립트에서 코드로 헤더에 쿠키를 담아 전송하면 서버에서 거부한다 (http only를 false로 풀어서 해결 가능)
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
