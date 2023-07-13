@@ -1,4 +1,4 @@
-package koo.securityv2jwt.auth;
+package koo.securityv2jwt.config.auth;
 
 import koo.securityv2jwt.model.User;
 import org.springframework.security.core.GrantedAuthority;

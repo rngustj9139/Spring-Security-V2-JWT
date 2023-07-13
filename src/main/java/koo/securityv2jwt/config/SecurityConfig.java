@@ -1,5 +1,6 @@
 package koo.securityv2jwt.config;
 
+import koo.securityv2jwt.config.jwt.JwtAuthenticationFilter;
 import koo.securityv2jwt.filter.MyFilter1;
 import koo.securityv2jwt.filter.MyFilter3;
 import lombok.RequiredArgsConstructor;
@@ -40,6 +41,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          * 이 대신 헤더의 authorization에 토큰(jwt)을 담는 방식을 이용 => 이것은 httpBasic 방식이 아닌 bearer token 방식임
          */
         .httpBasic().disable()
+        .addFilter(new JwtAuthenticationFilter(authenticationManager())) // 이 필터는 AuthenticationManager로 로그인을 진행시킴(WebSecurityConfigurerAdapter가 AuthenticaitonManager 들고 있음)
         .authorizeRequests()
         .antMatchers("/api/v1/user/**")
         .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
