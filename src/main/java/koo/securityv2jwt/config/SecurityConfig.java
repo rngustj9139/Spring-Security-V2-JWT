@@ -1,8 +1,10 @@
 package koo.securityv2jwt.config;
 
 import koo.securityv2jwt.config.jwt.JwtAuthenticationFilter;
+import koo.securityv2jwt.config.jwt.JwtAuthorizationFilter;
 import koo.securityv2jwt.filter.MyFilter1;
 import koo.securityv2jwt.filter.MyFilter3;
+import koo.securityv2jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -25,6 +27,7 @@ import org.springframework.web.filter.CorsFilter;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private final CorsFilter corsFilter; // CorsConfig의 CorsFilter를 DI
+    private final UserRepository userRepository;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -42,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
          */
         .httpBasic().disable()
         .addFilter(new JwtAuthenticationFilter(authenticationManager())) // 이 필터는 AuthenticationManager로 로그인을 진행시킴(WebSecurityConfigurerAdapter가 AuthenticaitonManager 들고 있음)
+        .addFilter(new JwtAuthorizationFilter(authenticationManager(), userRepository))
         .authorizeRequests()
         .antMatchers("/api/v1/user/**")
         .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
