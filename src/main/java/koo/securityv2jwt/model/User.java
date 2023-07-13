@@ -3,6 +3,7 @@ package koo.securityv2jwt.model;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -10,7 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter @Setter @ToString
 @NoArgsConstructor
 public class User {
 
