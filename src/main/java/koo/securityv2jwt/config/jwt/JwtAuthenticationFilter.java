@@ -1,5 +1,7 @@
 package koo.securityv2jwt.config.jwt;
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import koo.securityv2jwt.config.auth.PrincipalDetails;
 import koo.securityv2jwt.model.User;
@@ -17,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 스프링 시큐리티는 UsernamePasswordAuthenticationFilter라는 필터를 가지고 있음
@@ -79,7 +82,18 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult) throws IOException, ServletException {
         log.info("successfulAuthentication 함수 실행: 인증 완료됨");
-        super.successfulAuthentication(request, response, chain, authResult);
+
+        PrincipalDetails principalDetails = (PrincipalDetails) authResult.getPrincipal();
+
+        // jwt 토큰 만들기
+        String jwtToken = JWT.create()
+                .withSubject("cos토큰")
+                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 30))) // 1000이 1초
+                .withClaim("id", principalDetails.getUser().getId()) // 개인 클레임
+                .withClaim("username", principalDetails.getUser().getUsername()) // 개인 클레임
+                .sign(Algorithm.HMAC512("cos")); // secret은 cos, RSA방식은 아니고 해시 방식임
+
+        response.addHeader("Authorization", "Bearer " + jwtToken); // Bearer에 한칸 띄어야함
     }
 
 }
