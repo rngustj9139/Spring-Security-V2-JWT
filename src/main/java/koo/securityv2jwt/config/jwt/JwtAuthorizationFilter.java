@@ -2,6 +2,7 @@ package koo.securityv2jwt.config.jwt;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import koo.securityv2jwt.config.auth.PrincipalDetails;
 import koo.securityv2jwt.model.User;
 import koo.securityv2jwt.repository.UserRepository;
@@ -9,6 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 
@@ -17,6 +19,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Date;
 
 /**
  * 클라이언트가 인증 후 매번 서버에게 보내는 요청에 포함된 jwt가 유효한지 판단
@@ -43,16 +46,26 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         log.info("jwtHeader: {}", jwtHeader);
 
         /**
-         *  jwt 토큰을 검증해서 유효한지 확인
-        */
+         *  jwt 토큰을 검증해서 유효한지 확인 (유효하지 않을경우 저절로 스프링이 403 에러를 응답한다)
+         */
         if (jwtHeader == null || !jwtHeader.startsWith("Bearer")) {
             chain.doFilter(request, response);
 
-            return;
+            return; // return 하면 밑에 부분들이 진행이 안된다.
         }
 
         String jwtToken = request.getHeader("Authorization").replace("Bearer ", ""); // Bearer + 한칸 스페이스 부분을 그냥 공백으로 치환
         String username = JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
+        Date expireTime = JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getExpiresAt();
+
+        /**
+         * jwt 토큰의 만료시간이 지났는지 검증 but (유효하지 않을경우 저절로 스프링이 500 에러를 응답한다)
+         */
+//        if (expireTime.compareTo(new Date(System.currentTimeMillis())) > 0) {
+//            chain.doFilter(request, response);
+//
+//            return; // return 하면 밑에 부분들이 진행이 안된다.
+//        }
 
         if (username != null) { // 서명이 정상적으로 된 경우 (Authentication 객체를 만들어준다)
             User userEntity = userRepository.findByUsername(username);
@@ -63,7 +76,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             chain.doFilter(request, response);
         }
-
     }
 
 }

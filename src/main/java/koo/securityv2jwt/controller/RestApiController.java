@@ -1,9 +1,11 @@
 package koo.securityv2jwt.controller;
 
 import koo.securityv2jwt.config.auth.CustomBCryptPasswordEncoder;
+import koo.securityv2jwt.config.auth.PrincipalDetails;
 import koo.securityv2jwt.model.User;
 import koo.securityv2jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -37,8 +39,10 @@ public class RestApiController {
 
     // user 권한 가진 유저만 접근 가능
     @GetMapping("/api/v1/user")
-    public String user() {
-        return "user";
+    public Object user(Authentication authentication) {
+        PrincipalDetails principal = (PrincipalDetails) authentication.getPrincipal();
+
+        return principal.getUser().getUsername();
     }
 
     // manager 권한 가진 유저만 접근 가능

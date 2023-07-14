@@ -88,7 +88,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         // jwt 토큰 만들기
         String jwtToken = JWT.create()
                 .withSubject("cos토큰")
-                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 60))) // 1000이 1초
+                .withExpiresAt(new Date(System.currentTimeMillis() + (60000 * 2))) // 1000이 1초
                 .withClaim("id", principalDetails.getUser().getId()) // 개인 클레임
                 .withClaim("username", principalDetails.getUser().getUsername()) // 개인 클레임
                 .sign(Algorithm.HMAC512("cos")); // secret은 cos, RSA방식은 아니고 해시 방식임
