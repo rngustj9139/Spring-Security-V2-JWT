@@ -38,7 +38,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 
     private final AuthenticationManager authenticationManager;
 
-    @Override // 로그인 시도하고 필터 동작시 이 함수가 실행된다.
+    @Override // 로그인 시도하고 필터 동작시 이 함수가 실행된다. (localhost:8080/login으로 요청해야한다)
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         log.info("JwtAuthenticationFilter: 로그인 시도중");
 

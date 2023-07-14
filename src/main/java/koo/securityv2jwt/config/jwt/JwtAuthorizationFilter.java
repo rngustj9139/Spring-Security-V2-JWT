@@ -30,7 +30,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private UserRepository userRepository;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) { // /api/v1/user/test GET으로 요청해보기
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, UserRepository userRepository) { // /api/v1/user GET으로 요청해보기
         super(authenticationManager);
         this.userRepository = userRepository;
    }
